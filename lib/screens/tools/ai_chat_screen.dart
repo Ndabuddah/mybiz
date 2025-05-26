@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:markdown_widget/markdown_widget.dart';
-import 'package:provider/provider.dart';
 
 import '../../api/gemini_service.dart';
 import '../../constants/app_colors.dart';
 import '../../constants/app_styles.dart';
-import '../../providers/auth_provider.dart';
-import '../../widgets/custom_button.dart';
 
 class AIChatScreen extends StatefulWidget {
   const AIChatScreen({Key? key}) : super(key: key);
@@ -156,7 +153,11 @@ class _AIChatScreenState extends State<AIChatScreen> {
         margin: const EdgeInsets.symmetric(vertical: 8),
         padding: const EdgeInsets.all(12),
         constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.75),
-        decoration: BoxDecoration(color: message.isUser ? AppColors.primaryColor : (isDarkMode ? AppColors.darkCard : Colors.white), borderRadius: BorderRadius.circular(16), boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 5, offset: const Offset(0, 2))]),
+        decoration: BoxDecoration(
+          color: message.isUser ? AppColors.primaryColor : (isDarkMode ? AppColors.darkCard : Colors.white),
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 5, offset: const Offset(0, 2))],
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -166,11 +167,17 @@ class _AIChatScreenState extends State<AIChatScreen> {
               MarkdownWidget(
                 data: message.content,
                 config: MarkdownConfig(
-                  configs: [PreConfig(theme: PreTheme(textStyle: TextStyle(fontSize: 14, color: isDarkMode ? Colors.white70 : Colors.black87, fontFamily: 'monospace'), decoration: BoxDecoration(color: isDarkMode ? Colors.black26 : Colors.grey[200], borderRadius: BorderRadius.circular(8))))],
-                ),
+                    /* styles: {
+                    'p': TextStyle(fontSize: 14, color: isDarkMode ? Colors.white70 : Colors.black87),
+                    // Add more styles as needed.
+                  },*/
+                    ),
               ),
             const SizedBox(height: 4),
-            Text('${message.timestamp.hour}:${message.timestamp.minute.toString().padLeft(2, '0')}', style: TextStyle(fontSize: 10, color: message.isUser ? Colors.white70 : (isDarkMode ? Colors.white38 : Colors.black38))),
+            Text(
+              '${message.timestamp.hour}:${message.timestamp.minute.toString().padLeft(2, '0')}',
+              style: TextStyle(fontSize: 10, color: message.isUser ? Colors.white70 : (isDarkMode ? Colors.white38 : Colors.black38)),
+            ),
           ],
         ),
       ),
