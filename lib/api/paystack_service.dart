@@ -1,7 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:paystack_flutter/paystack_flutter.dart';
+import 'package:paystack_for_flutter/paystack_for_flutter.dart';
+
 
 class PaystackService {
   static const String secretKey = 'sk_live_50be0cff4e564295a8723aa3c8432d805895e248';
@@ -11,7 +12,7 @@ class PaystackService {
       await PaystackFlutter().pay(
         context: context,
         secretKey: secretKey,
-        amount: (amount * 100).toInt(), // Amount in cents
+        amount: amount * 100.toInt(), // Amount in cents
         email: email,
         callbackUrl: 'https://callback.com',
         showProgressBar: true,

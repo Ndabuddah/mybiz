@@ -1,58 +1,29 @@
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:provider/provider.dart';
 
-import 'constants/app_colors.dart';
-import 'providers/auth_provider.dart';
-import 'providers/business_provider.dart';
-import 'providers/subscription_provider.dart';
-import 'providers/theme_provider.dart';
-import 'screens/auth/splash_screen.dart';
-import 'utils/firebase_options.dart';
+class AppColors {
+  // Primary app color
+  static const Color primaryColor = Color(0xFF5D5CDE);
+  static const Color accentColor = Color(0xFF36B37E);
 
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  // Light theme
+  static const Color lightBackground = Colors.white;
+  static const Color lightText = Color(0xFF1E1E1E);
+  static const Color lightCard = Colors.white;
 
-  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
+  // Dark theme
+  static const Color darkBackground = Color(0xFF181818);
+  static const Color darkText = Colors.white;
+  static const Color darkCard = Color(0xFF262626);
 
-  runApp(const MyApp());
-}
+  // Status colors
+  static const Color success = Color(0xFF36B37E);
+  static const Color error = Color(0xFFFF5C5C);
+  static const Color warning = Color(0xFFFFAB2E);
+  static const Color info = Color(0xFF2684FF);
 
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [ChangeNotifierProvider(create: (_) => ThemeProvider()), ChangeNotifierProvider(create: (_) => AuthProvider()), ChangeNotifierProvider(create: (_) => BusinessProvider()), ChangeNotifierProvider(create: (_) => SubscriptionProvider())],
-      child: Consumer<ThemeProvider>(
-        builder: (context, themeProvider, _) {
-          return MaterialApp(
-            title: 'MyBiz',
-            debugShowCheckedModeBanner: false,
-            theme: ThemeData(
-              primaryColor: AppColors.primaryColor,
-              fontFamily: 'Inter',
-              brightness: Brightness.light,
-              scaffoldBackgroundColor: Colors.white,
-              appBarTheme: AppBarTheme(backgroundColor: Colors.white, foregroundColor: Colors.black, elevation: 0, iconTheme: IconThemeData(color: Colors.black)),
-              colorScheme: ColorScheme.light(primary: AppColors.primaryColor, secondary: AppColors.accentColor),
-            ),
-            darkTheme: ThemeData(
-              primaryColor: AppColors.primaryColor,
-              fontFamily: 'Inter',
-              brightness: Brightness.dark,
-              scaffoldBackgroundColor: AppColors.darkBackground,
-              appBarTheme: AppBarTheme(backgroundColor: AppColors.darkBackground, foregroundColor: Colors.white, elevation: 0, iconTheme: IconThemeData(color: Colors.white)),
-              colorScheme: ColorScheme.dark(primary: AppColors.primaryColor, secondary: AppColors.accentColor, surface: AppColors.darkCard, background: AppColors.darkBackground),
-            ),
-            themeMode: themeProvider.themeMode,
-            home: const SplashScreen(),
-          );
-        },
-      ),
-    );
-  }
+  // Gradient colors
+  static const List<Color> primaryGradient = [
+    Color(0xFF5D5CDE),
+    Color(0xFF6E6CE0),
+  ];
 }

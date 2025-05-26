@@ -1,13 +1,9 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 
 import '../../api/gemini_service.dart';
-import '../../api/paystack_service.dart';
 import '../../constants/app_colors.dart';
 import '../../constants/app_styles.dart';
 import '../../models/business.dart';
@@ -84,20 +80,17 @@ class _DocumentGeneratorScreenState extends State<DocumentGeneratorScreen> {
       final navigator = Navigator.of(context);
       final result = await navigator.push(
         MaterialPageRoute(
-          builder:
-              (_) => PaymentScreen(
-                amount: documentPrice,
-                toolId: 'document_${_documentType.toLowerCase().replaceAll(' ', '_')}',
-                toolName: _documentType,
-                onSuccess: () async {
-                  final success = await authProvider.purchaseTool('document_${_documentType.toLowerCase().replaceAll(' ', '_')}');
-                  if (success) {
-                    ScaffoldMessenger.of(navigator.context).showSnackBar(SnackBar(content: Text('Successfully purchased $_documentType generator!'), backgroundColor: AppColors.success));
-                    return true;
-                  }
-                  return false;
-                },
-              ),
+          builder: (_) => PaymentScreen(
+            amount: documentPrice,
+            toolId: 'document_${_documentType.toLowerCase().replaceAll(' ', '_')}',
+            toolName: _documentType,
+            onSuccess: () async {
+              final success = await authProvider.purchaseTool('document_${_documentType.toLowerCase().replaceAll(' ', '_')}');
+              if (success) {
+                ScaffoldMessenger.of(navigator.context).showSnackBar(SnackBar(content: Text('Successfully purchased $_documentType generator!'), backgroundColor: AppColors.success));
+              }
+            },
+          ),
         ),
       );
 
@@ -213,10 +206,9 @@ Create a comprehensive, detailed, and professional document that is ready for pr
                 isExpanded: true,
                 dropdownColor: isDarkMode ? AppColors.darkCard : Colors.white,
                 hint: Text('Select Business', style: TextStyle(color: isDarkMode ? Colors.white54 : Colors.black45)),
-                items:
-                    businessProvider.businesses.map((Business business) {
-                      return DropdownMenuItem<Business>(value: business, child: Text(business.name));
-                    }).toList(),
+                items: businessProvider.businesses.map((Business business) {
+                  return DropdownMenuItem<Business>(value: business, child: Text(business.name));
+                }).toList(),
                 onChanged: (Business? value) {
                   setState(() {
                     _selectedBusiness = value;

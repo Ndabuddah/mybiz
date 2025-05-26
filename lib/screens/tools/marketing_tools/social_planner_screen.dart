@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
@@ -347,10 +349,9 @@ Format the output as structured JSON data with one object per day, containing al
                 isExpanded: true,
                 dropdownColor: isDarkMode ? AppColors.darkCard : Colors.white,
                 hint: Text('Select Business', style: TextStyle(color: isDarkMode ? Colors.white54 : Colors.black45)),
-                items:
-                    businessProvider.businesses.map((Business business) {
-                      return DropdownMenuItem<Business>(value: business, child: Text(business.name));
-                    }).toList(),
+                items: businessProvider.businesses.map((Business business) {
+                  return DropdownMenuItem<Business>(value: business, child: Text(business.name));
+                }).toList(),
                 onChanged: (Business? value) {
                   setState(() {
                     _selectedBusiness = value;
@@ -397,34 +398,33 @@ Format the output as structured JSON data with one object per day, containing al
           Wrap(
             spacing: 8,
             runSpacing: 8,
-            children:
-                _socialPlatforms.map((platform) {
-                  final isSelected = _selectedPlatforms.contains(platform['name']);
-                  return InkWell(
-                    onTap: () {
-                      setState(() {
-                        if (isSelected) {
-                          _selectedPlatforms.remove(platform['name']);
-                        } else {
-                          _selectedPlatforms.add(platform['name']);
-                        }
-                      });
-                    },
+            children: _socialPlatforms.map((platform) {
+              final isSelected = _selectedPlatforms.contains(platform['name']);
+              return InkWell(
+                onTap: () {
+                  setState(() {
+                    if (isSelected) {
+                      _selectedPlatforms.remove(platform['name']);
+                    } else {
+                      _selectedPlatforms.add(platform['name']);
+                    }
+                  });
+                },
+                borderRadius: BorderRadius.circular(24),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                  decoration: BoxDecoration(
+                    color: isSelected ? AppColors.primaryColor : (isDarkMode ? Colors.white.withOpacity(0.05) : Colors.black.withOpacity(0.03)),
                     borderRadius: BorderRadius.circular(24),
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                      decoration: BoxDecoration(
-                        color: isSelected ? AppColors.primaryColor : (isDarkMode ? Colors.white.withOpacity(0.05) : Colors.black.withOpacity(0.03)),
-                        borderRadius: BorderRadius.circular(24),
-                        border: Border.all(color: isSelected ? AppColors.primaryColor : (isDarkMode ? Colors.white24 : Colors.black12)),
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [Icon(platform['icon'], size: 16, color: isSelected ? Colors.white : (isDarkMode ? Colors.white70 : Colors.black54)), const SizedBox(width: 8), Text(platform['name'], style: TextStyle(color: isSelected ? Colors.white : (isDarkMode ? Colors.white : Colors.black)))],
-                      ),
-                    ),
-                  );
-                }).toList(),
+                    border: Border.all(color: isSelected ? AppColors.primaryColor : (isDarkMode ? Colors.white24 : Colors.black12)),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [Icon(platform['icon'], size: 16, color: isSelected ? Colors.white : (isDarkMode ? Colors.white70 : Colors.black54)), const SizedBox(width: 8), Text(platform['name'], style: TextStyle(color: isSelected ? Colors.white : (isDarkMode ? Colors.white : Colors.black)))],
+                  ),
+                ),
+              );
+            }).toList(),
           ),
           const SizedBox(height: 16),
 
@@ -509,17 +509,16 @@ Format the output as structured JSON data with one object per day, containing al
 
         // Calendar view
         Expanded(
-          child:
-              _generatedPlan.isEmpty
-                  ? Center(child: Text('No content plan generated', style: TextStyle(color: isDarkMode ? Colors.white54 : Colors.black45)))
-                  : ListView.builder(
-                    padding: const EdgeInsets.all(16),
-                    itemCount: _generatedPlan.length,
-                    itemBuilder: (context, index) {
-                      final day = _generatedPlan[index];
-                      return _buildDayCard(day, isDarkMode);
-                    },
-                  ),
+          child: _generatedPlan.isEmpty
+              ? Center(child: Text('No content plan generated', style: TextStyle(color: isDarkMode ? Colors.white54 : Colors.black45)))
+              : ListView.builder(
+                  padding: const EdgeInsets.all(16),
+                  itemCount: _generatedPlan.length,
+                  itemBuilder: (context, index) {
+                    final day = _generatedPlan[index];
+                    return _buildDayCard(day, isDarkMode);
+                  },
+                ),
         ),
 
         // Action buttons
@@ -591,16 +590,15 @@ Format the output as structured JSON data with one object per day, containing al
                       const SizedBox(height: 4),
                       Wrap(
                         spacing: 4,
-                        children:
-                            platformsList.map((platform) {
-                              return Chip(
-                                label: Text(platform, style: TextStyle(fontSize: 10, color: Colors.white)),
-                                backgroundColor: _getPlatformColor(platform),
-                                padding: EdgeInsets.zero,
-                                materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                labelPadding: const EdgeInsets.symmetric(horizontal: 8),
-                              );
-                            }).toList(),
+                        children: platformsList.map((platform) {
+                          return Chip(
+                            label: Text(platform, style: TextStyle(fontSize: 10, color: Colors.white)),
+                            backgroundColor: _getPlatformColor(platform),
+                            padding: EdgeInsets.zero,
+                            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                            labelPadding: const EdgeInsets.symmetric(horizontal: 8),
+                          );
+                        }).toList(),
                       ),
                     ],
                   ),
@@ -630,14 +628,13 @@ Format the output as structured JSON data with one object per day, containing al
             Wrap(
               spacing: 4,
               runSpacing: 4,
-              children:
-                  hashtagsList.map((hashtag) {
-                    return Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                      decoration: BoxDecoration(color: isDarkMode ? Colors.white.withOpacity(0.1) : Colors.black.withOpacity(0.05), borderRadius: BorderRadius.circular(16)),
-                      child: Text(hashtag.startsWith('#') ? hashtag : '#$hashtag', style: TextStyle(fontSize: 12, color: isDarkMode ? Colors.white70 : Colors.black54)),
-                    );
-                  }).toList(),
+              children: hashtagsList.map((hashtag) {
+                return Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  decoration: BoxDecoration(color: isDarkMode ? Colors.white.withOpacity(0.1) : Colors.black.withOpacity(0.05), borderRadius: BorderRadius.circular(16)),
+                  child: Text(hashtag.startsWith('#') ? hashtag : '#$hashtag', style: TextStyle(fontSize: 12, color: isDarkMode ? Colors.white70 : Colors.black54)),
+                );
+              }).toList(),
             ),
           ],
         ),

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../constants/app_colors.dart';
+import '../../constants/app_styles.dart';
 import '../../providers/auth_provider.dart';
 import '../home/home_screen.dart';
 import 'onboarding_screen.dart';

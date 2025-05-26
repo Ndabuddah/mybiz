@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 
+import '../../../api/gemini_service.dart';
 import '../../../constants/app_colors.dart';
 import '../../../constants/app_styles.dart';
 import '../../../models/business.dart';
 import '../../../providers/business_provider.dart';
-import '../../../api/gemini_service.dart';
 import '../../../utils/helper.dart';
-import '../../../widgets/custom_button.dart';
 import '../../../widgets/custom_text_field.dart';
 
 class LegalAdvisorScreen extends StatefulWidget {
@@ -48,8 +47,7 @@ class _LegalAdvisorScreenState extends State<LegalAdvisorScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final businessProvider = Provider.of<BusinessProvider>(context, listen: false);
       setState(() {
-        _selectedBusiness = businessProvider.selectedBusiness ??
-            (businessProvider.businesses.isNotEmpty ? businessProvider.businesses[0] : null);
+        _selectedBusiness = businessProvider.selectedBusiness ?? (businessProvider.businesses.isNotEmpty ? businessProvider.businesses[0] : null);
       });
     });
   }
@@ -207,9 +205,7 @@ Provide accurate, actionable legal guidance related to the query. Be specific an
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: isDarkMode
-                    ? Colors.white.withOpacity(0.05)
-                    : Colors.grey[100],
+                color: isDarkMode ? Colors.white.withOpacity(0.05) : Colors.grey[100],
                 border: Border(
                   bottom: BorderSide(
                     color: isDarkMode ? Colors.white12 : Colors.black12,
@@ -224,9 +220,7 @@ Provide accurate, actionable legal guidance related to the query. Be specific an
                     child: Container(
                       padding: const EdgeInsets.symmetric(horizontal: 12),
                       decoration: BoxDecoration(
-                        color: isDarkMode
-                            ? Colors.white.withOpacity(0.05)
-                            : Colors.white,
+                        color: isDarkMode ? Colors.white.withOpacity(0.05) : Colors.white,
                         borderRadius: BorderRadius.circular(8),
                         border: Border.all(
                           color: isDarkMode ? Colors.white24 : Colors.black12,
@@ -270,9 +264,7 @@ Provide accurate, actionable legal guidance related to the query. Be specific an
                     child: Container(
                       padding: const EdgeInsets.symmetric(horizontal: 12),
                       decoration: BoxDecoration(
-                        color: isDarkMode
-                            ? Colors.white.withOpacity(0.05)
-                            : Colors.white,
+                        color: isDarkMode ? Colors.white.withOpacity(0.05) : Colors.white,
                         borderRadius: BorderRadius.circular(8),
                         border: Border.all(
                           color: isDarkMode ? Colors.white24 : Colors.black12,
@@ -341,20 +333,20 @@ Provide accurate, actionable legal guidance related to the query. Be specific an
               child: _chatHistory.isEmpty
                   ? _buildEmptyState(isDarkMode)
                   : ListView.builder(
-                controller: _scrollController,
-                padding: const EdgeInsets.all(16),
-                itemCount: _chatHistory.length,
-                itemBuilder: (context, index) {
-                  final message = _chatHistory[index];
-                  return _buildMessageBubble(
-                    message['text'] as String,
-                    message['isUser'] as bool,
-                    message['timestamp'] as DateTime,
-                    message['isError'] as bool? ?? false,
-                    isDarkMode,
-                  );
-                },
-              ),
+                      controller: _scrollController,
+                      padding: const EdgeInsets.all(16),
+                      itemCount: _chatHistory.length,
+                      itemBuilder: (context, index) {
+                        final message = _chatHistory[index];
+                        return _buildMessageBubble(
+                          message['text'] as String,
+                          message['isUser'] as bool,
+                          message['timestamp'] as DateTime,
+                          message['isError'] as bool? ?? false,
+                          isDarkMode,
+                        );
+                      },
+                    ),
             ),
 
             // Loading indicator
@@ -479,18 +471,138 @@ Provide accurate, actionable legal guidance related to the query. Be specific an
 
   Widget _buildSuggestionChip(String text, bool isDarkMode) {
     return InkWell(
-        onTap: () {
-          _queryController.text = text;
-          _submitQuery();
-        },
-        borderRadius: BorderRadius.circular(20),
-        child: Container(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 16,
-              vertical: 8,
+      onTap: () {
+        _queryController.text = text;
+        _submitQuery();
+      },
+      borderRadius: BorderRadius.circular(20),
+      child: Container(
+        padding: const EdgeInsets.symmetric(
+          horizontal: 16,
+          vertical: 8,
+        ),
+        decoration: BoxDecoration(
+          color: isDarkMode ? Colors.white.withOpacity(0.1) : Colors.black.withOpacity(0.05),
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(
+            color: isDarkMode ? Colors.white24 : Colors.black12,
+          ),
+        ),
+        child: Text(
+          text,
+          style: TextStyle(
+            fontSize: 14,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildMessageBubble(
+    String text,
+    bool isUser,
+    DateTime timestamp,
+    bool isError,
+    bool isDarkMode,
+  ) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16.0),
+      child: Row(
+        mainAxisAlignment: isUser ? MainAxisAlignment.end : MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (!isUser) ...[
+            Container(
+              width: 32,
+              height: 32,
+              decoration: BoxDecoration(
+                color: isError ? Colors.red : AppColors.primaryColor,
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                isError ? Icons.error : Icons.balance,
+                color: Colors.white,
+                size: 16,
+              ),
             ),
-            decoration: BoxDecoration(
-            color: isDarkMode
-            ? Colors.white.withOpacity(0.1)
-            : Colors.black.withOpacity(0.05),
-    borderRadius: BorderRadius.circular
+            const SizedBox(width: 8),
+          ],
+          Flexible(
+            child: Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: isUser ? AppColors.primaryColor : (isError ? Colors.red.withOpacity(isDarkMode ? 0.2 : 0.1) : (isDarkMode ? AppColors.darkCard : Colors.white)),
+                borderRadius: BorderRadius.circular(16),
+                boxShadow: isDarkMode
+                    ? []
+                    : [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.05),
+                          blurRadius: 5,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
+                border: isUser || isError
+                    ? null
+                    : Border.all(
+                        color: isDarkMode ? Colors.white24 : Colors.black12,
+                      ),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    text,
+                    style: TextStyle(
+                      color: isUser ? Colors.white : (isError ? Colors.red : (isDarkMode ? Colors.white : Colors.black)),
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        '${timestamp.hour}:${timestamp.minute.toString().padLeft(2, '0')}',
+                        style: TextStyle(
+                          fontSize: 10,
+                          color: isUser ? Colors.white70 : (isDarkMode ? Colors.white54 : Colors.black45),
+                        ),
+                      ),
+                      if (!isUser && !isError) ...[
+                        const SizedBox(width: 8),
+                        InkWell(
+                          onTap: () => _copyToClipboard(text),
+                          child: Icon(
+                            Icons.copy,
+                            size: 14,
+                            color: isDarkMode ? Colors.white54 : Colors.black45,
+                          ),
+                        ),
+                      ],
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+          if (isUser) ...[
+            const SizedBox(width: 8),
+            Container(
+              width: 32,
+              height: 32,
+              decoration: BoxDecoration(
+                color: AppColors.primaryColor,
+                shape: BoxShape.circle,
+              ),
+              child: const Icon(
+                Icons.person,
+                color: Colors.white,
+                size: 16,
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+}
