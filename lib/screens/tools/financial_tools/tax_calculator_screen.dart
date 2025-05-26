@@ -106,13 +106,14 @@ class _TaxCalculatorScreenState extends State<TaxCalculatorScreen> {
       }
 
       // Calculate effective tax rate
-      final effectiveTaxRate = taxableIncome > 0 ? (taxAmount / taxableIncome) * 100 : 0;
+      // Update effective tax rate calculation
+      final effectiveTaxRate = taxableIncome > 0 ? (taxAmount / taxableIncome) * 100 : 0.0;
 
-      // Update state with results
+// Assign it to the state variable
       setState(() {
         _taxableIncome = taxableIncome;
         _taxAmount = taxAmount;
-        _effectiveTaxRate = effectiveTaxRate;
+        _effectiveTaxRate = effectiveTaxRate.toDouble(); // Ensure it's a double
         _isCalculated = true;
         _isLoading = false;
       });
